@@ -25,7 +25,13 @@
           <li><a href="{% url 'winterblog:index' %}">Home</a></li>
           <li><a href="">All Blogs</a></li>
           <li><a href="">All Bloggers</a></li>
-
+          <li><a href="{% url 'winterblog:signup'%}">SignUp</a></li>
+          {% if user.is_authenticated%}
+            <li>User:{{user.get_username}}</li>
+            <li><a href="{%url 'winterblog:logout'%}">Logout</a></li>
+          {%else%}
+          <li><a href="{%url 'winterblog:login'%}">Login</a></li>
+          {%endif%}
       </ul>
 
      {% endblock %}
