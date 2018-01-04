@@ -1,0 +1,11 @@
+{% extends "winterblog/base_generic.html"%}
+{%block content%}
+<h1>{{blog.headline}}</h1>
+<p>{{blog.blog_text}}</p>
+<h4>Comments</h4>
+<form method="post">{%csrf_token%}
+    <input type="hidden" name='d' value="{{blog.id}}"/>
+    {{form}}
+
+</form>
+{% endblock %}

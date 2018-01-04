@@ -1,0 +1,12 @@
+{% extends "winterblog/base_generic.html"%}
+{%block content%}
+{% if blog_list%}
+    <ul>
+        {% for blog in blog_list%}
+        <li><a href="{% url 'winterblog:blog_detail' blog.id%}"><{{blog.headline}}</a></li>
+        {%endfor%}
+    </ul>
+{%else%}
+    <p>No blogs have been published yet.</p>
+{%endif%}
+{%endblock%}
