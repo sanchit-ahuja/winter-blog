@@ -36,7 +36,7 @@ def blog_list(request):
 @login_required
 def blog_detail(request,blog_id):
     blog=get_object_or_404(Blog,pk=blog_id)
-    return render(request,'winterblog/blog_detail.html',{'blog_detail':blog_detail})
+    return render(request,'winterblog/blog_detail.html',{'blog':blog})
 
     
 @login_required

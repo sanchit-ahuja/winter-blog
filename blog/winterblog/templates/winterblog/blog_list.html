@@ -3,7 +3,7 @@
 {% if blog_list%}
     <ul>
         {% for blog in blog_list%}
-        <li><a href="{% url 'winterblog:blog_detail' blog.id%}"><{{blog.headline}}</a></li>
+        <li><a href="{% url 'winterblog:blog_detail' blog.id%}">{{blog.headline}}</a></li>
         {%endfor%}
     </ul>
 {%else%}
