@@ -9,8 +9,12 @@ from django.http import HttpResponse, HttpResponseRedirect,HttpRequest
 from .forms import SignUpForm,LoginForm,CommentForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+
+
 def index(request):
     return render(request,'winterblog/index.html')
+
+
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -24,23 +28,28 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'winterblog/signup.html', {'form': form})
-@login_required
+
+
+@login_required()
 def blogger_list(request):
-    pass
-@login_required
+    blogger_list=Blogger.objects.all()
+    return render(request,'winterblog/blogger_list.html',{'blogger_list':blogger_list})
+
+
+@login_required()
 def blog_list(request):
     blog_list=Blog.objects.order_by('pub_date')[:5]
     return render(request,'winterblog/blog_list.html',{'blog_list':blog_list})
 
 
-@login_required
+@login_required()
 def blog_detail(request,blog_id):
     blog=get_object_or_404(Blog,pk=blog_id)
     comments=Comment.objects.all()
     return render(request,'winterblog/blog_detail.html',{'blog':blog, 'comments':comments})
 
     
-@login_required
+@login_required()
 def comment(request,blog_id):
     blog=get_object_or_404(Blog,pk=blog_id)
     comments=Comment.objects.all()
@@ -57,6 +66,7 @@ def comment(request,blog_id):
             comment=Comment.objects.filter(blog=blog)
             return redirect('winterblog:comment',blog_id)
     
+
 def login2(request):
     if request.method=='POST':
         form=LoginForm(request.POST)
@@ -69,6 +79,7 @@ def login2(request):
     else:
         form = LoginForm()
     return render(request, 'winterblog/login.html', {'form': form})
+
 
 def logout2(request):
     logout(request)
