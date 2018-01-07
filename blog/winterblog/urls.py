@@ -9,6 +9,6 @@ urlpatterns = [
     url(r'^blog/(?P<blog_id>\d+)/$',views.blog_detail,name='blog_detail'),
     url(r'^signup/$',views.signup,name='signup'),
     url(r'^login/$',views.login2,name='login'),
-    url(r'^logout/$',views.logout2,name='logout')
-    
+    url(r'^logout/$',views.logout2,name='logout'),
+    url(r'^blog/(?P<blog_id>\d+)/comment/$',views.comment,name='comment'),    
 ]

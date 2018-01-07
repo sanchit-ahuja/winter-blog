@@ -3,9 +3,13 @@
 <h1>{{blog.headline}}</h1>
 <p>{{blog.blog_text}}</p>
 <h4>Comments</h4>
-<form method="post">{%csrf_token%}
-    <input type="hidden" name='d' value="{{blog.id}}"/>
-    {{form}}
+{% for comment in comments %}
+    {% if comment.comment_text %}
+        <p> {{comment.comment_text}} </p>
+    {% else %}
+        <p> comment text not found </p>
+    {% endif %}
+{% endfor %}
+<a class="btn btn-default" href="{%url 'winterblog:comment' blog.id%}">add comment</a> 
 
-</form>
 {% endblock %}

@@ -24,8 +24,8 @@ class Blog(models.Model):
     class Meta:
         ordering=('pub_date',)
 class Comment(models.Model):
-    comment_text=models.TextField(max_length=200,help_text='Enter comment for the blog')
-    blogger=models.ForeignKey(Blogger,on_delete=models.CASCADE)
-    blog=models.ForeignKey(Blog,on_delete=models.CASCADE)
-    pub_date=models.DateTimeField(auto_now_add=True)
+    comment_text=models.TextField(max_length=200,help_text='Enter comment for the blog',null=True)
+    blogger=models.ForeignKey(Blogger,on_delete=models.CASCADE,null=True)
+    blog=models.ForeignKey(Blog,on_delete=models.CASCADE,null=True)
+    pub_date=models.DateTimeField(auto_now_add=True,null=True)
     

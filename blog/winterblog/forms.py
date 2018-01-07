@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
-from winterblog.models import Comment
+from .models import Comment
 
 class SignUpForm(UserCreationForm):
     first_name=forms.CharField(max_length=30)
@@ -21,5 +21,5 @@ class LoginForm(forms.Form):
 class CommentForm(ModelForm):
     class Meta:
         model=Comment
-        fields=()
+        fields=('blogger','comment_text',)
         

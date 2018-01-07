@@ -36,23 +36,27 @@ def blog_list(request):
 @login_required
 def blog_detail(request,blog_id):
     blog=get_object_or_404(Blog,pk=blog_id)
-    return render(request,'winterblog/blog_detail.html',{'blog':blog})
+    comments=Comment.objects.all()
+    return render(request,'winterblog/blog_detail.html',{'blog':blog, 'comments':comments})
 
     
 @login_required
 def comment(request,blog_id):
-    if request.method=='POST':
-        form=CommentForm(request.POST)
+    blog=get_object_or_404(Blog,pk=blog_id)
+    comments=Comment.objects.all()
+    form=CommentForm(request.POST)  
+    if request.method == "GET":
+        return render(request,'winterblog/comment.html',{'form':form})
+    if request.method =='POST':        
         if form.is_valid():
-            comment_text=form.cleaned_data.get('comment_text')
-            value=form.cleaned_data.get('value')
-        form=CommentForm()
-        b=request.POST['d']
-
-        blog=Blog.objects.get(pk=b)
-        comment=Comment.objects.filter(blog=blog)
-    return render(request,'comment.html',{'comment':comment})
-    #return HttpResponseRedirect("")
+            comment=form.save(commit=False)
+            comment.save()
+            return redirect('winterblog:blog_detail',blog_id)
+        else:
+            form=CommentForm()
+            comment=Comment.objects.filter(blog=blog)
+            return redirect('winterblog:comment',blog_id)
+    
 def login2(request):
     if request.method=='POST':
         form=LoginForm(request.POST)
@@ -61,10 +65,11 @@ def login2(request):
             raw_password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('winterblog/index.html')
+            return redirect('winterblog:index')
     else:
         form = LoginForm()
     return render(request, 'winterblog/login.html', {'form': form})
+
 def logout2(request):
     logout(request)
-    return redirect('winterblog/index.html')
+    return redirect('winterblog:login')
