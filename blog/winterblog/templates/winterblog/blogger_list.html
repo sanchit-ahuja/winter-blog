@@ -1,4 +1,13 @@
 {% extends "winterblog/base_generic.html"%}
 {%block content%}
-<h3>yea</h3>
+<ul>
+    {%if blogger_list%}
+        {%for blogger in blogger_list%}
+        <li><a href="{% url 'winterblog:blogger_detail' blogger.id%}">{{blogger.user}}</a></li>
+        {%endfor%}
+    {%else%}
+        <h2>No bloggers registered yet</h2>
+    {%endif%}
+</ul>
+
 {%endblock%}

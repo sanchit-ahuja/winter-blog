@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^login/$',views.login2,name='login'),
     url(r'^logout/$',views.logout2,name='logout'),
     url(r'^blog/(?P<blog_id>\d+)/comment/$',views.comment,name='comment'),  
-    url(r'^bloggers/$',views.blogger_list,name='blogger_list'),  
+    url(r'^bloggers/$',views.blogger_list,name='blogger_list'),
+    url(r'^bloggers/(?P<blogger_id>\d+)$',views.blogger_detail,name='blogger_detail'),  
 ]

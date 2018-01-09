@@ -1,0 +1,19 @@
+{% extends "winterblog/base_generic.html"%}
+{%block content%}
+<h1>{{blogger.user}}</h1>
+{%if blogger_detail%}
+<h2>Blog Posts</h2>
+    <ul>
+        {%for blogger in blogger_detail%}
+            {%if blog.headline%}
+            
+            <li><a href="{% url 'winterblog:blog_detail' blogger.id%}">{{blog.headline}}</a></li>
+            {%endif%}
+
+        {%endfor%}
+    </ul>
+    
+
+{%endif%}
+
+{%endblock%}

@@ -62,6 +62,11 @@ def blogger_list(request):
     blogger_list=Blogger.objects.all()
     return render(request,'winterblog/blogger_list.html',{'blogger_list':blogger_list})
 
+@login_required
+def blogger_detail(request,blogger_id):
+    blogger=get_object_or_404(Blogger,pk=blogger_id)
+    blog=get_object_or_404(Blog)
+    return render(request,'winterblog/blogger_detail',{'blog':blog,'blogger':blogger})
 
 @login_required
 def blog_list(request):
