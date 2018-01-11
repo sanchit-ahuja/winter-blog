@@ -26,4 +26,4 @@ class LoginForm(forms.Form):
 class CommentForm(ModelForm):
     class Meta:
         model=Comment
-        fields=('blogger','comment_text',)
+        fields=('user','comment_text',)
