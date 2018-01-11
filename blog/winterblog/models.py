@@ -21,7 +21,7 @@ class Blog(models.Model):
     headline=models.CharField(max_length=100)
     pub_date=models.DateField(default=date.today)
     blog_text=models.TextField(max_length=1000)
-    blogger=models.ForeignKey(Blogger,on_delete=models.CASCADE)
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
     def get_absolute_url(self):
         return reverse('blog-detail',args=[str(self.id)])
     def __str__(self):
@@ -32,6 +32,6 @@ class Blog(models.Model):
 
 class Comment(models.Model):
     comment_text=models.TextField(max_length=200,help_text='Enter comment for the blog',null=True)
-    blogger=models.ForeignKey(Blogger,on_delete=models.CASCADE,null=True)
+    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     blog=models.ForeignKey(Blog,on_delete=models.CASCADE,null=True)
     pub_date=models.DateTimeField(auto_now_add=True,null=True)

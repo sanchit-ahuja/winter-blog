@@ -3,6 +3,7 @@ from django.http import Http404
 from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse
 from .models import Blog,Blogger,Comment
+from django.contrib.auth.models import User
 from django.views.generic import View
 from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponse, HttpResponseRedirect,HttpRequest
@@ -59,14 +60,14 @@ def logout2(request):
 
 @login_required
 def blogger_list(request):
-    blogger_list=Blogger.objects.all()
-    return render(request,'winterblog/blogger_list.html',{'blogger_list':blogger_list})
+    user_list=User.objects.all()
+    return render(request,'winterblog/blogger_list.html',{'user_list':user_list})
 
 @login_required
 def blogger_detail(request, blogger_id):
-    blogger=get_object_or_404(Blogger,pk=blogger_id)
+    user=get_object_or_404(User, pk=blogger_id)
     blogs = Blog.objects.all()
-    return render(request,'winterblog/blogger_detail.html',{'blogs':blogs,'blogger':blogger})
+    return render(request,'winterblog/blogger_detail.html',{'blogs':blogs,'user':user})
 
 @login_required
 def blog_list(request):
