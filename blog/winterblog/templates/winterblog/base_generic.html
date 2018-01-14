@@ -24,8 +24,10 @@
       <ul class="sidebar-nav">
           <li><a href="{% url 'winterblog:index' %}">Home</a></li>
           <li><a href="{% url 'winterblog:blog_list'%}">All Blogs</a></li>
+          <li><a href="{% url 'winterblog:blog_create'%}">Create Blog</a></li>
           <li><a href="{% url 'winterblog:blogger_list'%}">All Bloggers</a></li>
-          <li><a href="{% url 'winterblog:signup'%}">SignUp</a></li>
+          <li><a href="{% url 'winterblog:signup'%}">Sign Up</a></li>
+          <li><a href="{% url 'winterblog:xls'%}"> Details</a></li>
           {% if user.is_authenticated%}
             <li>User:{{user.get_username}}</li>
             <li><a href="{%url 'winterblog:logout'%}">Logout</a></li>

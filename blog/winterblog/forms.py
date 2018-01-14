@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
-from .models import Comment
+from .models import Comment,Blog
 
 
 class SignUpForm(UserCreationForm):
@@ -26,4 +26,8 @@ class LoginForm(forms.Form):
 class CommentForm(ModelForm):
     class Meta:
         model=Comment
-        fields=('user','comment_text',)
+        fields=('user','comment_text','blog') #Set the fields to the current blog and the user logged in
+class BlogForm(ModelForm):
+    class Meta:
+        model=Blog
+        fields=['headline','blog_text','user']

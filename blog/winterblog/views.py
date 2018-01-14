@@ -1,3 +1,4 @@
+
 from __future__ import unicode_literals
 from django.http import Http404
 from django.shortcuts import render,get_object_or_404,redirect
@@ -7,11 +8,12 @@ from django.contrib.auth.models import User
 from django.views.generic import View
 from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponse, HttpResponseRedirect,HttpRequest
-from .forms import SignUpForm,LoginForm,CommentForm
+from .forms import SignUpForm,LoginForm,CommentForm,BlogForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-
-
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import user_passes_test
+import xlwt
 # Visible View for the home page
 def index(request):
     return render(request,'winterblog/index.html')
@@ -66,12 +68,12 @@ def blogger_list(request):
 @login_required
 def blogger_detail(request, blogger_id):
     user=get_object_or_404(User, pk=blogger_id)
-    blogs = Blog.objects.all()
+    blogs = Blog.objects.all().filter(id=blogger_id)
     return render(request,'winterblog/blogger_detail.html',{'blogs':blogs,'user':user})
 
 @login_required
 def blog_list(request):
-    blog_list=Blog.objects.order_by('pub_date')[:5]
+    blog_list=Blog.objects.all()
     return render(request,'winterblog/blog_list.html',{'blog_list':blog_list})
 
 
@@ -83,9 +85,25 @@ def blog_detail(request,blog_id):
 
 
 @login_required
+def blog_create(request):
+    blog=Blog.objects.all()
+    form=BlogForm(request.POST)
+    if request.method=="GET":
+        return render(request,'winterblog/blog_create.html',{'form':form})
+    if request.method=="POST":
+        if form.is_valid():
+            blog=form.save(commit=False)
+            blog.save()
+            return redirect('winterblog:blog_list')
+        else:
+            form=BlogForm()
+            return redirect('winterblog:blog_create')
+
+
+@login_required
 def comment(request,blog_id):
     blog=get_object_or_404(Blog,pk=blog_id)
-    comments=Comment.objects.all()
+    comments=Comment.objects.all().filter(id=blog_id)
     form=CommentForm(request.POST)
     if request.method == "GET":
         return render(request,'winterblog/comment.html',{'form':form})
@@ -98,3 +116,46 @@ def comment(request,blog_id):
             form=CommentForm()
             comment=Comment.objects.filter(blog=blog)
             return redirect('winterblog:comment',blog_id)
+
+
+#delete asking for two arguments
+def delete(request,blog_id):
+    blog=get_object_or_404(Blog,pk=blog_id)
+    comment=get_object_or_404(Comment,pk=blog_id)
+    if comment.user==request.user:
+        comment.is_removed=True
+        comment.save()
+    return redirect('winterblog:blog_detail',blog_id)
+
+
+
+@user_passes_test(lambda x:x.is_superuser)
+def admin_tools_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="users.xls"'
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Users')
+    row_num = 0
+
+
+    columns = ['Username', 'First name', 'Last name', 'Email address','password' ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num],)
+
+    rows = User.objects.all().values_list('username', 'first_name', 'last_name', 'email','password')
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], )
+
+    wb.save(response)
+    return response
+
+
+
+
+    
+
+    
