@@ -14,6 +14,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import user_passes_test
 import xlwt
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph
+from reportlab.lib.pagesizes import A4, cm 
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
 # Visible View for the home page
 def index(request):
     return render(request,'winterblog/index.html')
@@ -138,7 +145,6 @@ def admin_tools_xls(request):
     ws = wb.add_sheet('Users')
     row_num = 0
 
-
     columns = ['Username', 'First name', 'Last name', 'Email address','password' ]
 
     for col_num in range(len(columns)):
@@ -154,7 +160,31 @@ def admin_tools_xls(request):
     return response
 
 
-
+def admin_tools_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment;   filename="users.pdf" '  
+    buffer=BytesIO()
+    p=canvas.Canvas(buffer,pagesize=A4)
+    width, height = A4
+    styles = getSampleStyleSheet()
+    styleN = styles["BodyText"]
+    styleN.alignment = TA_LEFT
+    styleBH = styles["Normal"]
+    styleBH.alignment = TA_CENTER
+    user_data=User.objects.all().values_list('username','email')
+    username=Paragraph("'<b>Username</b>'",styleBH)
+    email=Paragraph("'<b>Email Id</b>'",styleBH)
+    data=[[username,email]]
+    for i in user_data:
+        username=str(username[i])
+        email=str(email[i])
+        data+=[username,email]
+    table=Table(data,colWidths=[4*cm,4*cm,4*cm,4*cm])
+    p.showpage()
+    p.save()
+    pdf=buffer.getvalue()
+    return response
+    
 
     
 

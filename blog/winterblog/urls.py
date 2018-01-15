@@ -15,6 +15,6 @@ urlpatterns = [
     url(r'^delete/$',views.delete,name='delete'),
     url(r'^blog_create/$',views.blog_create,name='blog_create'),
     url(r'^export/xls/$',views.admin_tools_xls,name='xls'),
-    url(r'^export/pdf/$',views.admin_tools_xls,name='pdf'),
+    url(r'^export/pdf/$',views.admin_tools_pdf,name='pdf'),
     
 ]
