@@ -7,7 +7,9 @@
     <ul>
         {%for blog in blogs%}
             {%if blog.headline%}
-            <li><a href="{% url 'winterblog:blog_detail' user.id%}">{{blog.headline}}</a></li>
+            <li><a href="{% url 'winterblog:blog_detail' blog.id%}">{{blog.headline}}</a></li>
+            {% else %}
+            <li> Not Found </li>
             {%endif%}
         {%endfor%}
     </ul>

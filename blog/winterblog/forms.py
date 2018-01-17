@@ -26,8 +26,9 @@ class LoginForm(forms.Form):
 class CommentForm(ModelForm):
     class Meta:
         model=Comment
-        fields=('user','comment_text','blog') #Set the fields to the current blog and the user logged in
+        fields=('comment_text',) #Set the fields to the current blog and the user logged in
 class BlogForm(ModelForm):
     class Meta:
         model=Blog
-        fields=['headline','blog_text','user']
+        fields=['headline','blog_text',]
+        

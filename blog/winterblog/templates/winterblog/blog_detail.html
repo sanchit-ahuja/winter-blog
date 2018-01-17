@@ -6,11 +6,13 @@
 {% for comment in comments %}
     {% if comment.comment_text %}
         <p> {{comment.comment_text}}---------->{{comment.user}}</p>
-        <a href="{%url 'winterblog:delete'%}">Delete your comment</a>
-    {% else %}
-        <p> comment text not found </p>
+        {% if request.user == comment.user %}
+            <a class="btn btn-default" href="{%url 'winterblog:delete' id=comment.id typ='comment' %}">delete</a>
+        {% endif %}
     {% endif %}
 {% endfor %}
 <a class="btn btn-default" href="{%url 'winterblog:comment' blog.id%}">add comment</a>
-
+{% if request.user == user %}
+    <a class="btn btn-default" href="{%url 'winterblog:delete' id=blog.id typ='blog'}">delete</a>
+{% endif %}
 {% endblock %}

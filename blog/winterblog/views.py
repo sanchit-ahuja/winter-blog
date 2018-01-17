@@ -73,9 +73,10 @@ def blogger_list(request):
     return render(request,'winterblog/blogger_list.html',{'user_list':user_list})
 
 @login_required
-def blogger_detail(request, blogger_id):
-    user=get_object_or_404(User, pk=blogger_id)
-    blogs = Blog.objects.all().filter(id=blogger_id)
+def blogger_detail(request, user_id):
+    user=get_object_or_404(User, pk=user_id)
+    blogs = user.blog_set.all()
+    print(blogs)
     return render(request,'winterblog/blogger_detail.html',{'blogs':blogs,'user':user})
 
 @login_required
@@ -87,8 +88,9 @@ def blog_list(request):
 @login_required
 def blog_detail(request,blog_id):
     blog=get_object_or_404(Blog,pk=blog_id)
-    comments=Comment.objects.all()
-    return render(request,'winterblog/blog_detail.html',{'blog':blog, 'comments':comments})
+    comments=blog.comment_set.all()
+    user = blog.user
+    return render(request,'winterblog/blog_detail.html',{'blog':blog, 'comments':comments, 'user':blog.user})
 
 
 @login_required
@@ -100,6 +102,7 @@ def blog_create(request):
     if request.method=="POST":
         if form.is_valid():
             blog=form.save(commit=False)
+            blog.user=request.user
             blog.save()
             return redirect('winterblog:blog_list')
         else:
@@ -113,10 +116,14 @@ def comment(request,blog_id):
     comments=Comment.objects.all().filter(id=blog_id)
     form=CommentForm(request.POST)
     if request.method == "GET":
-        return render(request,'winterblog/comment.html',{'form':form})
+        context = {'blog_id':blog_id, 'form':form}
+        return render(request,'winterblog/comment.html',context)
     if request.method =='POST':
         if form.is_valid():
             comment=form.save(commit=False)
+            blog.user=request.user
+            comment.user=request.user
+            comment.blog = Blog.objects.get(pk=request.POST["blog_id"])
             comment.save()
             return redirect('winterblog:blog_detail',blog_id)
         else:
@@ -125,15 +132,15 @@ def comment(request,blog_id):
             return redirect('winterblog:comment',blog_id)
 
 
-#delete asking for two arguments
-def delete(request,blog_id):
-    blog=get_object_or_404(Blog,pk=blog_id)
-    comment=get_object_or_404(Comment,pk=blog_id)
-    if comment.user==request.user:
-        comment.is_removed=True
-        comment.save()
-    return redirect('winterblog:blog_detail',blog_id)
-
+def delete(request,typ,id):
+    if typ == 'blog':
+        blog = Blog.objects.get(id=id)
+        blog.delete()
+        return redirect('winterblog:blogger_detail',request.user.id)
+    else:
+        comment = Comment.objects.get(id=id)
+        comment.delete()
+        return redirect('winterblog:blog_detail',comment.blog.id)
 
 
 @user_passes_test(lambda x:x.is_superuser)
@@ -176,9 +183,11 @@ def admin_tools_pdf(request):
     email=Paragraph("'<b>Email Id</b>'",styleBH)
     data=[[username,email]]
     for i in user_data:
-        username=str(username[i])
-        email=str(email[i])
-        data+=[username,email]
+        username=str(i.username).encode('utf-8')
+        email=str(i.email).encode('utf-8')
+        user=Paragraph(username,styleN)
+        mail=Paragraph(email,styleN)
+        data+=[user,mail]
     table=Table(data,colWidths=[4*cm,4*cm,4*cm,4*cm])
     p.showpage()
     p.save()
