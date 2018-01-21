@@ -13,6 +13,6 @@
 {% endfor %}
 <a class="btn btn-default" href="{%url 'winterblog:comment' blog.id%}">add comment</a>
 {% if request.user == user %}
-    <a class="btn btn-default" href="{%url 'winterblog:delete' id=blog.id typ='blog'}">delete</a>
+    <a class="btn btn-default" href="{%url 'winterblog:delete' id=blog.id typ='blog'%}">delete</a>
 {% endif %}
 {% endblock %}

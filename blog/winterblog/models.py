@@ -3,19 +3,22 @@ from __future__ import unicode_literals
 from datetime import date
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.core.urlresolvers import reverse
 
 
 class Blogger(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    following = models.ManyToManyField(User,related_name='following')
+    follows = models.ManyToManyField(User,related_name='following')
 
     def __str__(self):
         return self.user.username
 
-    def get_absolute_url(self):
-        return reverse('blogger-detail',args=[str(self.id)])
-
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Blogger.objects.create(user=instance)
 
 class Blog(models.Model):
     headline=models.CharField(max_length=100)

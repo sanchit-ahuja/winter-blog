@@ -194,7 +194,11 @@ def admin_tools_pdf(request):
     pdf=buffer.getvalue()
     return response
     
-
-    
+def follow(request,user_id):
+    blogger = Blogger.objects.get(user=request.user)
+    userFolllow = get_object_or_404(Blogger, user_id=user_id)
+    if request.method == 'POST':
+        userFollow.follows.add(blogger)
+    return redirect('winterblog:blogger_detail',user_id)
 
     

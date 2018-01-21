@@ -4,6 +4,7 @@
 <h1>{{user.username}}</h1>
 
 <h2>Blog Posts</h2>
+<h3><a href="{% url 'winterblog:follow' user.id%}">Follow</a></h3>
     <ul>
         {%for blog in blogs%}
             {%if blog.headline%}
