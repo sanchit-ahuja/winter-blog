@@ -166,7 +166,7 @@ def admin_tools_xls(request):
     wb.save(response)
     return response
 
-
+@user_passes_test(lambda x:x.is_superuser)
 def admin_tools_pdf(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;   filename="users.pdf" '  
@@ -178,27 +178,41 @@ def admin_tools_pdf(request):
     styleN.alignment = TA_LEFT
     styleBH = styles["Normal"]
     styleBH.alignment = TA_CENTER
-    user_data=User.objects.all().values_list('username','email')
+    def coord(x, y, unit=1):
+        x, y = x * unit, height - y * unit
+        return x, y
+    user_data=User.objects.all().only('username', 'email')
     username=Paragraph("'<b>Username</b>'",styleBH)
     email=Paragraph("'<b>Email Id</b>'",styleBH)
     data=[[username,email]]
-    for i in user_data:
-        username=str(i.username).encode('utf-8')
-        email=str(i.email).encode('utf-8')
-        user=Paragraph(username,styleN)
-        mail=Paragraph(email,styleN)
-        data+=[user,mail]
+    try:
+
+        for i in user_data.user_data:
+            username=str(i.username).encode('utf-8')
+            email=str(i.email).encode('utf-8')
+            user=Paragraph(username,styleN)
+            mail=Paragraph(email,styleN)
+            data+=[user,mail]
+    except:
+        pass
     table=Table(data,colWidths=[4*cm,4*cm,4*cm,4*cm])
-    p.showpage()
+    table.wrapOn(p, width, height)
+    table.wrapOn(p, width, height)
+    table.drawOn(p, *coord(1.8, 9.6, cm))
     p.save()
     pdf=buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
     return response
     
 def follow(request,user_id):
     user =User.objects.get(username=request.user)
-    userFolllow = get_object_or_404(Blogger, id=user_id)
+    userFollow = get_object_or_404(Blogger, id=user_id)
     if request.method == 'POST':
         userFollow.follows.add(user)
     return redirect('winterblog:blogger_detail',user_id)
 
-    
+def feed(request,user_id):
+    user=User.objects.get(username=request.user)
+    follow_list=Blogger.follows.get().filter(user=request.user)
+    blog=Blog.objects.get().filter()

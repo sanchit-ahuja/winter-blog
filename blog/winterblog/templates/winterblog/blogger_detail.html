@@ -5,9 +5,8 @@
 
 <h2>Blog Posts</h2>
 <form action="{% url 'winterblog:follow' user.id %}" method="POST">
-        {%csrf_token%}
         <input type="submit" value="follow"/>
-
+        {%csrf_token%}
     </form>
     
     
