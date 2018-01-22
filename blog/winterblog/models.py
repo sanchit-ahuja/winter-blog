@@ -11,6 +11,8 @@ from django.core.urlresolvers import reverse
 class Blogger(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     follows = models.ManyToManyField(User,related_name='following')
+    def get_absolute_url(self):
+        return reverse('blogger-detail',args=[str(self.id)])
 
     def __str__(self):
         return self.user.username

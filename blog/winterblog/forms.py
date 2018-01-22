@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
-from .models import Comment,Blog
+from .models import Comment,Blog,Blogger
 
 
 class SignUpForm(UserCreationForm):
@@ -31,4 +31,3 @@ class BlogForm(ModelForm):
     class Meta:
         model=Blog
         fields=['headline','blog_text',]
-        

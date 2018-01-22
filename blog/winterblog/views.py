@@ -76,8 +76,8 @@ def blogger_list(request):
 def blogger_detail(request, user_id):
     user=get_object_or_404(User, pk=user_id)
     blogs = user.blog_set.all()
-    print(blogs)
-    return render(request,'winterblog/blogger_detail.html',{'blogs':blogs,'user':user})
+    context={'blogs':blogs,'user':user}
+    return render(request,'winterblog/blogger_detail.html',context)
 
 @login_required
 def blog_list(request):
@@ -195,10 +195,10 @@ def admin_tools_pdf(request):
     return response
     
 def follow(request,user_id):
-    blogger = Blogger.objects.get(user=request.user)
-    userFolllow = get_object_or_404(Blogger, user_id=user_id)
+    user =User.objects.get(username=request.user)
+    userFolllow = get_object_or_404(Blogger, id=user_id)
     if request.method == 'POST':
-        userFollow.follows.add(blogger)
+        userFollow.follows.add(user)
     return redirect('winterblog:blogger_detail',user_id)
 
     

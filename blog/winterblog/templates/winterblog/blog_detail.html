@@ -3,6 +3,7 @@
 <h1>{{blog.headline}}</h1>
 <p>{{blog.blog_text}}</p>
 <h4>Comments</h4>
+
 {% for comment in comments %}
     {% if comment.comment_text %}
         <p> {{comment.comment_text}}---------->{{comment.user}}</p>
