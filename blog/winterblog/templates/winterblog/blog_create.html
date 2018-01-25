@@ -1,8 +1,10 @@
 {% extends 'winterblog/base_generic.html' %}
 
+
 {% block content %}
+{%load staticfiles%}
     <h1>New Blog Entry</h1>
-    <form method="POST" class="post-form">{% csrf_token %}
+    <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Post</button>
     </form>

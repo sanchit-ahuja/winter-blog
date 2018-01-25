@@ -1,6 +1,8 @@
 from django.conf.urls import url,include
 
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
 app_name='winterblog'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
@@ -17,4 +19,5 @@ urlpatterns = [
     url(r'^export/xls/$',views.admin_tools_xls,name='xls'),
     url(r'^export/pdf/$',views.admin_tools_pdf,name='pdf'),
     url(r'^follow/(?P<user_id>\d+)$',views.follow,name='follow'),
+    url(r'^feed/(?P<user_id>\d+)$',views.feed,name='feed'),
 ]

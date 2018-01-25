@@ -96,7 +96,7 @@ def blog_detail(request,blog_id):
 @login_required
 def blog_create(request):
     blog=Blog.objects.all()
-    form=BlogForm(request.POST)
+    form=BlogForm(request.POST,request.FILES)
     if request.method=="GET":
         return render(request,'winterblog/blog_create.html',{'form':form})
     if request.method=="POST":
@@ -210,6 +210,7 @@ def follow(request,user_id):
     userFollow = get_object_or_404(Blogger, id=user_id)
     if request.method == 'POST':
         userFollow.follows.add(user)
+        print(userFollow.follows)
     return redirect('winterblog:blogger_detail',user_id)
 
 def feed(request,user_id):

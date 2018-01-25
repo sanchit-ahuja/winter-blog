@@ -8,9 +8,24 @@ from django.dispatch import receiver
 from django.core.urlresolvers import reverse
 
 
+
+def markdown_to_html( markdownText, images ):    
+    image_ref = ""
+
+    for image in images:
+        image_url = settings.MEDIA_URL + image.image.url
+        image_ref = "%s\n[%s]: %s" % ( image_ref, image, image_url )
+
+    md = "%s\n%s" % ( markdownText, image_ref )
+    html = markdown.markdown( md )
+
+    return html
+
+
+
 class Blogger(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    follows = models.ManyToManyField(User,related_name='following')
+    follower = models.ManyToManyField(User,related_name='following')
     def get_absolute_url(self):
         return reverse('blogger-detail',args=[str(self.id)])
 
@@ -27,6 +42,7 @@ class Blog(models.Model):
     pub_date=models.DateField(default=date.today)
     blog_text=models.TextField(max_length=1000)
     user=models.ForeignKey(User,on_delete=models.CASCADE)
+    images = models.ImageField(upload_to='photo',null=True)
     def get_absolute_url(self):
         return reverse('blog-detail',args=[str(self.id)])
     def __str__(self):
@@ -40,3 +56,4 @@ class Comment(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     blog=models.ForeignKey(Blog,on_delete=models.CASCADE,null=True)
     pub_date=models.DateTimeField(auto_now_add=True,null=True)
+
