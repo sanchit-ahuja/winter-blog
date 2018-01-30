@@ -30,4 +30,4 @@ class CommentForm(ModelForm):
 class BlogForm(ModelForm):
     class Meta:
         model=Blog
-        fields=['headline','blog_text',]
+        fields=['headline','blog_text','images']
