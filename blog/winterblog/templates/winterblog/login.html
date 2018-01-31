@@ -14,4 +14,5 @@
     {%endfor%}
     <button type="submit">Login</button>
 </form>
+<a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a><br>
 {%endblock%}

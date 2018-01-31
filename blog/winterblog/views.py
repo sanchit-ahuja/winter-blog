@@ -209,8 +209,8 @@ def follow(request,user_id):
     user =User.objects.get(username=request.user)
     userFollow = get_object_or_404(Blogger, id=user_id)
     if request.method == 'POST':
-        userFollow.follows.add(user)
-        print(userFollow.follows)
+        userFollow.follower.add(user)
+        print(userFollow.follower)
     return redirect('winterblog:blogger_detail',user_id)
 
 def feed(request,user_id):

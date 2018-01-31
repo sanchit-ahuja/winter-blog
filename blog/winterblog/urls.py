@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^export/pdf/$',views.admin_tools_pdf,name='pdf'),
     url(r'^follow/(?P<user_id>\d+)$',views.follow,name='follow'),
     url(r'^feed/(?P<user_id>\d+)$',views.feed,name='feed'),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
 
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
